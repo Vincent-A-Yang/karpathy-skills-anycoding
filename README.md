@@ -4,11 +4,35 @@ Universal, reusable coding-agent skills for OpenCode, Claude Code, Cursor, Trae,
 
 [English](./README.md) | [简体中文](./README.zh.md)
 
+## Install behavior, not boilerplate
+
+Most AI coding tools can write code.
+
+Far fewer can consistently:
+
+- stop and ask when requirements are ambiguous
+- choose the smallest correct implementation
+- avoid unrelated edits
+- define success criteria before changing code
+
+This project gives coding agents a compact behavior layer that improves those habits across tools.
+
 ## What this is
 
 `karpathy-skills-anycoding` is a tool-agnostic skill pack that helps AI coding assistants behave more like pragmatic senior engineers.
 
 It turns a small set of high-signal engineering behaviors into reusable instruction files, adapters, and install scripts that work across multiple coding-agent tools.
+
+## Why this is different from a random prompt
+
+This repository is designed to be:
+
+- portable across multiple AI coding tools
+- short enough to stay influential
+- practical enough for real repositories
+- explicit about compatibility instead of overclaiming support
+
+It is not a giant framework prompt. It is a small operating layer for coding behavior.
 
 ## Why people use it
 
@@ -38,6 +62,8 @@ These principles are inspired by Andrej Karpathy's public comments about common 
 ## Install in one command
 
 Use the installer that matches your tool and run it inside the repository where you want the rules to apply.
+
+If your tool supports project instructions, rules files, custom skills, or system prompts, this project gives you a ready-to-install starting point.
 
 ### OpenCode
 
@@ -70,6 +96,15 @@ irm https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/a
 Install-KarpathySkills -Tool claude
 ```
 
+### What the installer does
+
+- `opencode` appends a marked block into `AGENTS.md`
+- `claude` appends a marked block into `CLAUDE.md`
+- `cursor` writes `.cursor/rules/karpathy-guidelines.mdc`
+- `universal` appends a portable block into a target file such as `AGENTS.md`
+
+If the block already exists, the installer skips duplicate insertion.
+
 ## Supported tools
 
 ### Confirmed direct instruction surfaces
@@ -88,6 +123,14 @@ These adapters are included as ready-to-use templates, but exact auto-loading be
 - OpenClaw
 - other prompt-driven or rules-driven coding agents
 
+## Common use cases
+
+- make an AI coding assistant stop overengineering routine changes
+- reduce drive-by refactors in generated diffs
+- add a reusable behavior layer across multiple tools in one team
+- improve project instruction quality without writing a long custom system prompt
+- bootstrap better coding habits for a new agent-enabled repository
+
 ## Quick start
 
 ### Option 1: use the core skill
@@ -101,6 +144,15 @@ Pick the closest file from `adapters/` and place it where your tool expects proj
 ### Option 3: use the reusable skill package
 
 If your tool supports a `SKILL.md`-style reusable package, use `skills/karpathy-guidelines/SKILL.md`.
+
+## What success looks like
+
+You know the skill is working when you start seeing:
+
+- more clarifying questions before implementation
+- smaller diffs with fewer unrelated edits
+- simpler code on the first pass
+- more explicit verification and fewer vague completions
 
 ## Repository structure
 
@@ -182,6 +234,24 @@ That makes it portable across tools that support any of the following:
 - agent profiles
 
 It works best when combined with repository-specific engineering rules such as language conventions, testing requirements, framework patterns, and security constraints.
+
+## FAQ
+
+### Is this tied to one AI tool?
+
+No. The core is tool-agnostic. Some adapters target known file-based entry points, while others are portable templates.
+
+### Does this guarantee better code?
+
+No prompt can guarantee quality. The goal is to improve default behavior and reduce common coding-agent failure modes.
+
+### Should I use this instead of repository-specific rules?
+
+No. Use this as the behavior layer, then combine it with your repo's actual engineering requirements.
+
+### Why not keep everything in one giant prompt?
+
+Because shorter behavioral instructions usually remain more influential and easier to maintain.
 
 ## Included files
 
