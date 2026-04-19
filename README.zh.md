@@ -65,6 +65,8 @@
 
 如果你的工具支持项目规则、指令文件、自定义 skill 或 system prompt，这个项目就提供了现成起点。
 
+默认情况下，安装脚本会写入你执行命令时的当前目录。对 OpenCode 来说，这通常意味着你应该在项目根目录执行，这样它会生成该项目自己的 `./AGENTS.md`。
+
 ### OpenCode
 
 ```bash
@@ -104,6 +106,27 @@ Install-KarpathySkills -Tool claude
 - `universal`：把通用规则块追加到指定目标文件，例如 `AGENTS.md`
 
 如果同一块已经存在，安装脚本会跳过，避免重复写入。
+
+### OpenCode 的项目安装与全局安装
+
+对 OpenCode 而言，有两个常用位置：
+
+- 项目级规则：项目根目录下的 `./AGENTS.md`
+- 全局个人规则：`~/.config/opencode/AGENTS.md`
+
+推荐默认做法：安装到项目根目录。
+
+如果你希望它作为 OpenCode 的全局个人规则生效，可以手动复制生成的文件：
+
+```bash
+cp AGENTS.md ~/.config/opencode/AGENTS.md
+```
+
+也可以直接安装到全局路径：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.sh | bash -s -- --tool opencode --output ~/.config/opencode/AGENTS.md
+```
 
 ## 支持的工具
 
@@ -199,6 +222,8 @@ karpathy-skills-anycoding/
 ### OpenCode
 
 使用安装脚本，或把 `adapters/opencode/AGENTS.md` 放到项目根目录并命名为 `AGENTS.md`。
+
+如果希望它作为 OpenCode 的全局个人默认规则生效，可将同样内容放到 `~/.config/opencode/AGENTS.md`。
 
 ### Claude Code
 

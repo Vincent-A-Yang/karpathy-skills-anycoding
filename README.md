@@ -65,6 +65,8 @@ Use the installer that matches your tool and run it inside the repository where 
 
 If your tool supports project instructions, rules files, custom skills, or system prompts, this project gives you a ready-to-install starting point.
 
+By default, the installer writes into your current working directory. For OpenCode, that means you should usually run it from your project root so it creates `./AGENTS.md` for that project.
+
 ### OpenCode
 
 ```bash
@@ -104,6 +106,27 @@ Install-KarpathySkills -Tool claude
 - `universal` appends a portable block into a target file such as `AGENTS.md`
 
 If the block already exists, the installer skips duplicate insertion.
+
+### OpenCode project vs global install
+
+For OpenCode, there are two useful locations:
+
+- Project-specific rules: `./AGENTS.md` in the project root
+- Global personal rules: `~/.config/opencode/AGENTS.md`
+
+Recommended default: install into the project root.
+
+If you want global personal behavior across all OpenCode sessions, you can either copy the generated file manually:
+
+```bash
+cp AGENTS.md ~/.config/opencode/AGENTS.md
+```
+
+or install directly to the global path:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.sh | bash -s -- --tool opencode --output ~/.config/opencode/AGENTS.md
+```
 
 ## Supported tools
 
@@ -199,6 +222,8 @@ karpathy-skills-anycoding/
 ### OpenCode
 
 Use the installer or copy `adapters/opencode/AGENTS.md` to your project root as `AGENTS.md`.
+
+For global personal defaults in OpenCode, place the same content at `~/.config/opencode/AGENTS.md`.
 
 ### Claude Code
 
