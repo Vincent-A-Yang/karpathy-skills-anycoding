@@ -1,170 +1,270 @@
-# Karpathy-Inspired Claude Code Guidelines
+# karpathy-skills-anycoding
 
-> Check out my new project [Multica](https://github.com/multica-ai/multica) — an open-source platform for running and managing coding agents with reusable skills.
->
-> Follow me on X: [https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
+Universal Karpathy-inspired skills and instruction packs for AI coding assistants, coding agents, and autonomous software engineering tools.
 
-A single `CLAUDE.md` file to improve Claude Code behavior, derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+This repository repackages a strong set of coding behaviors into a tool-agnostic format that can be reused across OpenCode, Claude Code, Cursor, Trae, OpenClaw, and similar AI coding tools.
 
-English | [简体中文](./README.zh.md)
+## Why this project exists
 
-## The Problems
+Many skill repositories are useful but tightly coupled to one product surface. This project instead centers everything around a single universal skill source, then ships adapters for multiple instruction surfaces.
 
-From Andrej's post:
+The goal is simple:
 
-> "The models make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, don't seek clarifications, don't surface inconsistencies, don't present tradeoffs, don't push back when they should."
+- one core skill
+- many tool adapters
+- minimal vendor lock-in
+- easy reuse in any coding agent workflow
 
-> "They really like to overcomplicate code and APIs, bloat abstractions, don't clean up dead code... implement a bloated construction over 1000 lines when 100 would do."
+## What problem this solves
 
-> "They still sometimes change/remove comments and code they don't sufficiently understand as side effects, even if orthogonal to the task."
+Many AI coding assistants still tend to:
 
-## The Solution
+- make silent assumptions
+- overengineer solutions
+- change unrelated code
+- act before defining success criteria
 
-Four principles in one file that directly address these issues:
+This repository gives your coding agent a small, strong behavioral layer that pushes it toward:
 
-| Principle | Addresses |
-|-----------|-----------|
-| **Think Before Coding** | Wrong assumptions, hidden confusion, missing tradeoffs |
-| **Simplicity First** | Overcomplication, bloated abstractions |
-| **Surgical Changes** | Orthogonal edits, touching code you shouldn't |
-| **Goal-Driven Execution** | Leverage through tests-first, verifiable success criteria |
+- clarifying ambiguity before implementation
+- choosing the simplest correct solution
+- making surgical diffs instead of broad rewrites
+- defining verifiable goals and looping until they pass
 
-## The Four Principles in Detail
+## Core principles
 
-### 1. Think Before Coding
+The skill keeps the same four high-value principles:
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+1. Think Before Coding
+2. Simplicity First
+3. Surgical Changes
+4. Goal-Driven Execution
 
-LLMs often pick an interpretation silently and run with it. This principle forces explicit reasoning:
+These principles are derived from Andrej Karpathy's public comments about common LLM coding failure modes.
 
-- **State assumptions explicitly** — If uncertain, ask rather than guess
-- **Present multiple interpretations** — Don't pick silently when ambiguity exists
-- **Push back when warranted** — If a simpler approach exists, say so
-- **Stop when confused** — Name what's unclear and ask for clarification
+## Supported usage styles
 
-### 2. Simplicity First
+This repository is designed for any of these patterns:
 
-**Minimum code that solves the problem. Nothing speculative.**
+- project-level instruction file
+- reusable local skill or prompt pack
+- agent memory / system prompt seed
+- editor rule file
+- team-wide engineering agent policy
+- copy-paste guidance for one-off sessions
 
-Combat the tendency toward overengineering:
+## Compatibility
 
-- No features beyond what was asked
-- No abstractions for single-use code
-- No "flexibility" or "configurability" that wasn't requested
-- No error handling for impossible scenarios
-- If 200 lines could be 50, rewrite it
+This repository currently covers two compatibility levels.
 
-**The test:** Would a senior engineer say this is overcomplicated? If yes, simplify.
+### Confirmed direct instruction surfaces
 
-### 3. Surgical Changes
+These have known file or rule entry points and are expected to work directly when installed into the correct path:
 
-**Touch only what you must. Clean up only your own mess.**
+- OpenCode via project-root `AGENTS.md`
+- Claude Code via project-root `CLAUDE.md`
+- Cursor via `.cursor/rules/karpathy-guidelines.mdc`
 
-When editing existing code:
+### Portable adapter templates
 
-- Don't "improve" adjacent code, comments, or formatting
-- Don't refactor things that aren't broken
-- Match existing style, even if you'd do it differently
-- If you notice unrelated dead code, mention it — don't delete it
+These are included as ready-to-use instruction packs, but exact auto-loading behavior depends on the tool version and how that tool exposes project instructions:
 
-When your changes create orphans:
+- Trae
+- OpenClaw
+- generic coding agents and prompt-based tools
 
-- Remove imports/variables/functions that YOUR changes made unused
-- Don't remove pre-existing dead code unless asked
+If your tool supports any kind of persistent instructions, project rules, workspace memory, custom skills, agent profiles, or startup prompt, this repository should be usable with little or no change.
 
-**The test:** Every changed line should trace directly to the user's request.
+## Repository structure
 
-### 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform imperative tasks into verifiable goals:
-
-| Instead of... | Transform to... |
-|--------------|-----------------|
-| "Add validation" | "Write tests for invalid inputs, then make them pass" |
-| "Fix the bug" | "Write a test that reproduces it, then make it pass" |
-| "Refactor X" | "Ensure tests pass before and after" |
-
-For multi-step tasks, state a brief plan:
-
+```text
+karpathy-skills-anycoding/
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── .gitignore
+├── core/
+│   └── karpathy-anycoding.md
+├── scripts/
+│   ├── install.sh
+│   └── install.ps1
+├── skills/
+│   └── karpathy-guidelines/
+│       └── SKILL.md
+├── adapters/
+│   ├── claude/
+│   │   └── CLAUDE.md
+│   ├── cursor/
+│   │   └── .cursor/
+│   │       └── rules/
+│   │           └── karpathy-guidelines.mdc
+│   ├── opencode/
+│   │   └── AGENTS.md
+│   ├── openclaw/
+│   │   └── AGENTS.md
+│   ├── trae/
+│   │   └── AGENTS.md
+│   └── universal/
+│       └── SYSTEM_PROMPT.md
+└── docs/
+    ├── ADOPTION.md
+    └── COMPATIBILITY.md
 ```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let the LLM loop independently. Weak criteria ("make it work") require constant clarification.
 
 ## Install
 
-**Option A: Claude Code Plugin (recommended)**
+### One-line install for the current project
 
-From within Claude Code, first add the marketplace:
-```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
-```
+These commands install the adapter into the current repository.
 
-Then install the plugin:
-```
-/plugin install andrej-karpathy-skills@karpathy-skills
-```
+### OpenCode
 
-This installs the guidelines as a Claude Code plugin, making the skill available across all your projects.
-
-**Option B: CLAUDE.md (per-project)**
-
-New project:
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool opencode
 ```
 
-Existing project (append):
+### Claude Code
+
 ```bash
-echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool claude
 ```
 
-## Using with Cursor
+### Cursor
 
-This repository includes a committed Cursor project rule ([`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc)) so the same guidelines apply when you open the project in Cursor. See **[CURSOR.md](CURSOR.md)** for setup, using the rule in other projects, and how this relates to Claude Code.
-
-## Key Insight
-
-From Andrej:
-
-> "LLMs are exceptionally good at looping until they meet specific goals... Don't tell it what to do, give it success criteria and watch it go."
-
-The "Goal-Driven Execution" principle captures this: transform imperative instructions into declarative goals with verification loops.
-
-## How to Know It's Working
-
-These guidelines are working if you see:
-
-- **Fewer unnecessary changes in diffs** — Only requested changes appear
-- **Fewer rewrites due to overcomplication** — Code is simple the first time
-- **Clarifying questions come before implementation** — Not after mistakes
-- **Clean, minimal PRs** — No drive-by refactoring or "improvements"
-
-## Customization
-
-These guidelines are designed to be merged with project-specific instructions. Add them to your existing `CLAUDE.md` or create a new one.
-
-For project-specific rules, add sections like:
-
-```markdown
-## Project-Specific Guidelines
-
-- Use TypeScript strict mode
-- All API endpoints must have tests
-- Follow the existing error handling patterns in `src/utils/errors.ts`
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool cursor
 ```
 
-## Tradeoff Note
+### Universal install to a custom file
 
-These guidelines bias toward **caution over speed**. For trivial tasks (simple typo fixes, obvious one-liners), use judgment — not every change needs the full rigor.
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool universal --output AGENTS.md
+```
 
-The goal is reducing costly mistakes on non-trivial work, not slowing down simple tasks.
+### PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.ps1 | iex
+Install-KarpathySkills -Tool claude
+```
+
+The installer is intentionally conservative:
+
+- for `CLAUDE.md` and `AGENTS.md`, it appends a marked block if the file already exists
+- for Cursor, it writes the dedicated rule file in `.cursor/rules/`
+- if the block is already installed, it skips duplicate insertion
+
+For self-hosting or testing, you can override the source with `KARPATHY_SKILLS_BASE_URL`.
+
+## Quick start
+
+### Option 1: Use the universal source
+
+Copy the contents of `core/karpathy-anycoding.md` into your tool's project instruction file, system prompt, memory, or custom skill.
+
+### Option 2: Use a tool adapter
+
+Pick the closest ready-made adapter from `adapters/` and place it where your tool expects project-level instructions.
+
+### Option 3: Use the skill format directly
+
+If your platform supports a reusable `SKILL.md`-style package, use `skills/karpathy-guidelines/SKILL.md`.
+
+## Recommended installation by tool
+
+### OpenCode
+
+Use the installer above or copy `adapters/opencode/AGENTS.md` into your project root as `AGENTS.md`.
+
+### Trae
+
+Start from `adapters/trae/AGENTS.md`, then place the content into the instruction surface Trae uses for your workspace or agent profile.
+
+### OpenClaw
+
+Start from `adapters/openclaw/AGENTS.md`, then use it as your project agent policy or bootstrap prompt.
+
+### Claude Code
+
+Use the installer above or copy `adapters/claude/CLAUDE.md` into your project root as `CLAUDE.md`.
+
+### Cursor
+
+Use the installer above or place `adapters/cursor/.cursor/rules/karpathy-guidelines.mdc` in your project's `.cursor/rules/` directory.
+
+### Any other AI coding assistant
+
+Use `adapters/universal/SYSTEM_PROMPT.md` or `core/karpathy-anycoding.md` as the starting point.
+
+## Why this works
+
+The instructions in this repository are intentionally short and behavioral rather than tool-API-specific. That makes them portable.
+
+They do not depend on hidden plugin logic. They depend on a simple fact shared by most coding agents: if a tool reads project instructions, those instructions can shape behavior.
+
+That means this repository is most effective when:
+
+- the tool already supports project instructions, rules, or system prompts
+- you combine these skills with repository-specific engineering rules
+- you keep the instruction layer concise enough to remain influential
+
+## How this version differs from the source inspiration
+
+This adaptation intentionally changes the packaging model:
+
+- removes dependence on one plugin ecosystem
+- centers the project on a single universal source of truth
+- adds ready-to-adapt variants for multiple coding-agent tools
+- keeps the principles minimal so they remain broadly portable
+
+## GitHub discovery focus
+
+This repository is intentionally described in terms commonly used across GitHub and current AI coding workflows:
+
+- AI coding assistant
+- coding agent
+- autonomous software agent
+- prompt engineering for coding
+- Claude Code
+- Cursor rules
+- OpenCode
+- Trae
+- OpenClaw
+- developer productivity
+- software engineering best practices
+
+The intention is not keyword stuffing. It is to make the project easier for developers to actually find when searching for high-signal instruction packs for coding agents.
+
+## Adoption advice
+
+These guidelines work best when merged with project-specific rules such as:
+
+- language conventions
+- testing requirements
+- framework patterns
+- commit or PR expectations
+- security and deployment constraints
+
+This skill should shape behavior, not replace repository-specific engineering context.
+
+## Included project files
+
+- `CONTRIBUTING.md` for contribution expectations
+- `CODE_OF_CONDUCT.md` for open source collaboration norms
+- `CHANGELOG.md` for release tracking
+- `docs/COMPATIBILITY.md` for honest tool-by-tool compatibility notes
+- `scripts/install.sh` and `scripts/install.ps1` for one-line installation
+
+## Attribution
+
+This project is inspired by and adapted from:
+
+- Source inspiration: [`multica-ai/andrej-karpathy-skills`](https://github.com/multica-ai/andrej-karpathy-skills)
+- Original idea source: Andrej Karpathy's comments on common LLM coding pitfalls
+
+Respect and thanks to the upstream author for the original distillation and packaging.
 
 ## License
 

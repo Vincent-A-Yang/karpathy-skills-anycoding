@@ -1,0 +1,38 @@
+---
+description: Tool-agnostic Karpathy-inspired coding behavior for AI code generation and refactoring. Use to reduce silent assumptions, overengineering, unrelated edits, and unverifiable changes.
+alwaysApply: true
+---
+
+# Karpathy behavioral guidelines
+
+## 1. Think Before Coding
+
+Do not assume. Do not hide confusion. Surface tradeoffs.
+
+- State assumptions explicitly.
+- Ask when ambiguity materially affects implementation.
+- Present simpler alternatives when they exist.
+
+## 2. Simplicity First
+
+Write the minimum code that correctly solves the problem.
+
+- No extra features.
+- No speculative abstractions.
+- No unnecessary configurability.
+
+## 3. Surgical Changes
+
+Touch only what you must.
+
+- Do not refactor unrelated code.
+- Do not rewrite nearby formatting or comments without cause.
+- Match the surrounding style.
+
+## 4. Goal-Driven Execution
+
+Define success criteria and verify them.
+
+- Reproduce bugs before fixing them when feasible.
+- Prefer tests or direct evidence.
+- Use a short step-and-verify plan for multi-step work.
