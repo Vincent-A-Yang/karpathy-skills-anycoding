@@ -1,53 +1,80 @@
 # karpathy-skills-anycoding
 
-受 Karpathy 启发的通用 AI 编程技能包，适用于多种 AI 编程工具、编码助手与自主 coding agent。
+面向 OpenCode、Claude Code、Cursor、Trae、OpenClaw 等 AI 编程工具的通用 coding-agent skills。
 
-这个仓库把一组高价值的 coding 行为原则重组为“工具无关”的通用格式，可复用于 OpenCode、Claude Code、Cursor、Trae、OpenClaw 以及其他类似的 AI coding 工具。
+[English](./README.md) | [简体中文](./README.zh.md)
 
-## 为什么要做这个项目
+## 这是什么
 
-很多 skills 项目本身很有价值，但常常绑定某一个工具入口或某一种插件形态。这个项目改为以一个统一核心 skill 为中心，再提供多种适配层。
+`karpathy-skills-anycoding` 是一个工具无关的通用 skill 包，目标是让 AI coding assistant 的行为更像务实的资深工程师。
 
-因此，这个版本做了三件事：
+它把一组高信号的工程行为原则整理成可复用的 instruction files、tool adapters 和一键安装脚本，让这些规则能在多种 AI 编程工具中复用。
 
-1. 把核心原则抽离成一个工具无关的统一 skill 源
-2. 为不同 AI 工具提供适配层
-3. 保持内容足够短、足够强、足够可移植
+## 为什么有人会用它
 
-## 这个项目解决什么问题
-
-很多 AI 编程助手仍然容易出现这些问题：
+很多 coding agent 仍然容易：
 
 - 替用户做错误假设
 - 过度工程、过度抽象
-- 顺手改动无关代码
+- 修改无关代码
 - 在没有定义成功标准前就开始实现
 
-这个项目的目标，是给 AI coding assistant 增加一层高信号、低噪音的行为约束，让它更像一个可靠的资深工程师：
+这个仓库的目标正好相反：
 
-- 先澄清歧义，再开始编码
-- 先找最小正确解，再写代码
-- 只改需要改的地方
-- 用可验证的结果来定义完成
+- 先澄清歧义
+- 先找最小正确解
+- 只做外科手术式改动
+- 用明确检查来验证结果
 
 ## 四个核心原则
-
-本项目保留了原始思路里最重要的四条原则：
 
 1. Think Before Coding
 2. Simplicity First
 3. Surgical Changes
 4. Goal-Driven Execution
 
-这些原则源自 Andrej Karpathy 对 LLM 编码失误模式的公开观察。
+这些原则来源于 Andrej Karpathy 对 LLM 编码常见失误模式的公开观察。
 
-## 兼容性
+## 一键安装
 
-本项目目前分为两类兼容性。
+在你希望规则生效的项目目录里执行对应命令。
+
+### OpenCode
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.sh | bash -s -- --tool opencode
+```
+
+### Claude Code
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.sh | bash -s -- --tool claude
+```
+
+### Cursor
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.sh | bash -s -- --tool cursor
+```
+
+### 通用安装
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.sh | bash -s -- --tool universal --output AGENTS.md
+```
+
+### PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/anycoding/scripts/install.ps1 | iex
+Install-KarpathySkills -Tool claude
+```
+
+## 支持的工具
 
 ### 已确认的直接入口
 
-这些工具有明确的项目级文件或规则入口，按约定路径放置后预期可直接生效：
+这些工具存在已知的项目级文件或规则入口，按约定路径安装后应该可以直接生效：
 
 - OpenCode：项目根目录 `AGENTS.md`
 - Claude Code：项目根目录 `CLAUDE.md`
@@ -55,22 +82,25 @@
 
 ### 可迁移适配模板
 
-这些适配文件可以直接复用，但是否自动加载仍取决于对应工具版本和其指令入口机制：
+这些适配文件可以直接复用，但是否自动加载仍取决于工具版本和配置方式：
 
 - Trae
 - OpenClaw
-- 通用系统提示词
-- 通用 `SKILL.md` 风格技能包
+- 其他基于 prompt 或 rules 的 coding agent
 
-如果你的工具支持以下任意一种机制，通常都可以直接使用本项目：
+## 快速开始
 
-- 项目级说明文件
-- 自定义技能
-- 工作区规则
-- Agent profile
-- 系统提示词
-- 启动 prompt
-- 持久化 memory
+### 方式 1：使用核心 skill
+
+把 `core/karpathy-anycoding.md` 放到你的工具指令入口里。
+
+### 方式 2：使用现成适配器
+
+从 `adapters/` 里选择最接近你工具形态的文件，放到对应入口。
+
+### 方式 3：使用可复用 skill 包
+
+如果你的工具支持 `SKILL.md` 风格的可复用技能包，可以直接使用 `skills/karpathy-guidelines/SKILL.md`。
 
 ## 仓库结构
 
@@ -108,151 +138,60 @@ karpathy-skills-anycoding/
 │       └── SYSTEM_PROMPT.md
 └── docs/
     ├── ADOPTION.md
-    └── COMPATIBILITY.md
+    ├── COMPATIBILITY.md
+    └── GITHUB_METADATA.md
 ```
 
-## 安装
-
-### 一键安装到当前项目
-
-以下命令会把对应适配文件安装到当前仓库。
+## 各工具推荐方式
 
 ### OpenCode
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool opencode
-```
+使用安装脚本，或把 `adapters/opencode/AGENTS.md` 放到项目根目录并命名为 `AGENTS.md`。
 
 ### Claude Code
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool claude
-```
+使用安装脚本，或把 `adapters/claude/CLAUDE.md` 放到项目根目录并命名为 `CLAUDE.md`。
 
 ### Cursor
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool cursor
-```
-
-### 通用安装到自定义文件
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.sh | bash -s -- --tool universal --output AGENTS.md
-```
-
-### PowerShell
-
-```powershell
-irm https://raw.githubusercontent.com/Vincent-A-Yang/karpathy-skills-anycoding/main/scripts/install.ps1 | iex
-Install-KarpathySkills -Tool claude
-```
-
-安装脚本默认采用保守策略：
-
-- 对 `CLAUDE.md` 和 `AGENTS.md`，如果文件已存在，会以带标记的块追加进去
-- 对 Cursor，会直接写入专用规则文件
-- 如果已经安装过同一块内容，会自动跳过，避免重复
-
-如果你要自托管或本地测试，可以通过 `KARPATHY_SKILLS_BASE_URL` 覆盖脚本的下载源地址。
-
-## 快速使用
-
-### 方式 1：直接使用通用核心版本
-
-将 `core/karpathy-anycoding.md` 的内容复制到你的工具所使用的项目指令、系统提示、工作区 memory 或自定义 skill 中。
-
-### 方式 2：使用适配器版本
-
-从 `adapters/` 中选择最接近你工具形态的版本直接使用。
-
-### 方式 3：使用 Skill 包格式
-
-如果你的平台支持 `SKILL.md` 风格的技能定义，可以直接使用 `skills/karpathy-guidelines/SKILL.md`。
-
-## 推荐使用方式
-
-### OpenCode
-
-直接使用安装脚本，或把 `adapters/opencode/AGENTS.md` 放到项目根目录并命名为 `AGENTS.md`。
+使用安装脚本，或将 `adapters/cursor/.cursor/rules/karpathy-guidelines.mdc` 放到 `.cursor/rules/`。
 
 ### Trae
 
-优先使用 `adapters/trae/AGENTS.md`，将其放入 Trae 对应的工作区或 agent 指令入口。
+从 `adapters/trae/AGENTS.md` 开始，把它放到 Trae 的 workspace instruction 或 agent profile 入口。
 
 ### OpenClaw
 
-优先使用 `adapters/openclaw/AGENTS.md`，作为项目级 agent policy 或启动提示。
-
-### Claude Code
-
-直接使用安装脚本，或把 `adapters/claude/CLAUDE.md` 放到项目根目录并命名为 `CLAUDE.md`。
-
-### Cursor
-
-直接使用安装脚本，或将 `adapters/cursor/.cursor/rules/karpathy-guidelines.mdc` 放到项目 `.cursor/rules/` 目录中。
+从 `adapters/openclaw/AGENTS.md` 开始，把它放到项目 instruction 或 bootstrap prompt 入口。
 
 ### 其他 AI 编程工具
 
-可以从 `adapters/universal/SYSTEM_PROMPT.md` 或 `core/karpathy-anycoding.md` 开始。
+从 `adapters/universal/SYSTEM_PROMPT.md` 或 `core/karpathy-anycoding.md` 开始。
 
-## 为什么这种方式会起效
+## 为什么这种方式有效
 
-本项目的核心内容是“行为规则”，而不是依赖某个插件私有逻辑的功能代码。只要 AI 工具有项目指令、规则文件、系统提示、agent profile 或类似入口，这些规则就有机会持续影响其行为。
+本项目强调的是行为规则，而不是某个私有插件生态的功能代码。
 
-因此，本项目最适合以下场景：
+因此，只要一个工具支持以下任意一种入口，这套规则通常就有机会持续影响它的行为：
 
-- 工具本身支持项目级规则或系统提示
-- 你会把这些 rules 和仓库本身的工程规范一起使用
-- 你希望 instruction 足够短、足够强，而不是被冗长说明稀释
+- 项目说明文件
+- rules 文件
+- 自定义 skill
+- system prompt
+- workspace memory
+- agent profile
 
-## 这个版本与灵感来源的区别
+它最适合与仓库自身的工程规范一起使用，例如语言约定、测试要求、框架模式和安全约束。
 
-本版本的关键改造点包括：
+## 仓库内包含的内容
 
-- 不再依赖单一插件生态
-- 以一个通用核心文件作为事实来源
-- 提供多个 AI 工具的适配层
-- 保持内容精简，方便复制、拼接、迁移和组合
-
-## 面向 GitHub 搜索与热门主题的描述方向
-
-为了更容易被开发者搜索到，本项目的 README 和定位有意识地覆盖了当前 GitHub 上常见且相关的主题表达，例如：
-
-- AI coding assistant
-- coding agent
-- autonomous software agent
-- prompt engineering for coding
-- developer productivity
-- software engineering best practices
-- Claude Code
-- Cursor rules
-- OpenCode
-- Trae
-- OpenClaw
-
-这里的目标不是堆关键词，而是让真正需要“高质量 coding agent 行为规范”的用户更容易找到它。
-
-## 采用建议
-
-本项目最适合和你自己的仓库规则一起使用，例如：
-
-- 编程语言约定
-- 测试要求
-- 框架约束
-- PR / commit 规范
-- 安全规则
-- 部署要求
-
-这个 skills 项目负责约束“行为方式”，不负责替代你项目本身的工程上下文。
-
-## 项目化补充内容
-
-- `CONTRIBUTING.md`：贡献说明
-- `CODE_OF_CONDUCT.md`：协作行为规范
-- `CHANGELOG.md`：版本变更记录
-- `docs/COMPATIBILITY.md`：工具兼容性说明
+- `core/karpathy-anycoding.md`：核心 skill 源文件
+- `skills/karpathy-guidelines/SKILL.md`：可复用 skill 包
+- `adapters/`：不同工具形态的适配文件
 - `scripts/install.sh` 与 `scripts/install.ps1`：一键安装脚本
+- `docs/COMPATIBILITY.md`：兼容性说明
+- `docs/ADOPTION.md`：采用建议
+- `docs/GITHUB_METADATA.md`：GitHub description、topics、social preview 建议文案
 
 ## 致谢与归因
 
